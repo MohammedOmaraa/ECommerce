@@ -1,4 +1,6 @@
 
+using ECommerce.API.Extentions;
+using ECommerce.Infrastructure;
 using ECommerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +8,7 @@ namespace ECommerce.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -15,10 +17,12 @@ namespace ECommerce.API
                 options.UseSqlServer(builder.Configuration.GetConnectionString("StoreDbConnection")));
 
             builder.Services.AddControllers();
+            builder.Services.AddInfrastructureServices(builder.Configuration);
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
             var app = builder.Build();
+            await app.MigrateAndSeedDatabaseAsync();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
