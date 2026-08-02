@@ -16,6 +16,12 @@ namespace ECommerce.Infrastructure.Seeding
         {
             try
             {
+                var pendingMigrations = dbContext.Database.GetPendingMigrations();
+                if (pendingMigrations.Any())
+                {
+                    await dbContext.Database.MigrateAsync(ct);
+                }
+
                 var SeedPath = Path.Combine(AppContext.BaseDirectory, "DataSeed");
 
                 await SeedIfEmptyAsync<ProductsBrand>(SeedPath, "brands.json", ct);

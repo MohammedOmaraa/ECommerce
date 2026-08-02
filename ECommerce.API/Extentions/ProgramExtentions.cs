@@ -1,6 +1,4 @@
-﻿using ECommerce.Infrastructure.Data;
-using ECommerce.Infrastructure.Seeding;
-using Microsoft.EntityFrameworkCore;
+﻿using ECommerce.Domain.Contracts;
 
 namespace ECommerce.API.Extentions
 {
@@ -10,18 +8,9 @@ namespace ECommerce.API.Extentions
         {
             using var scope = app.Services.CreateScope();
             var services = scope.ServiceProvider;
-            var dbContext = services.GetRequiredService<StoreDbContext>();
-            var catalogLogger = services.GetRequiredService<ILogger<CatalogDataSeeder>>();
-            
-            var pendingMigrations = dbContext.Database.GetPendingMigrations();
-            if (pendingMigrations.Any())
-            {
-                await dbContext.Database.MigrateAsync(ct);
-            }
+            var seeder = scope.ServiceProvider.GetRequiredKeyedService<IDataSeeder>("Catalog");
 
-            CatalogDataSeeder catalogSeeder = new CatalogDataSeeder(dbContext, catalogLogger);
-
-            await catalogSeeder.SeedAsync(ct);
+            await seeder.SeedAsync(ct);
         }
     }
 }
