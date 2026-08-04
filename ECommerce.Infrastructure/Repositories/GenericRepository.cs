@@ -30,6 +30,12 @@ namespace ECommerce.Infrastructure.Repositories
             return await dbContext.Set<TEntity>().AsNoTracking().ToListAsync(ct);
         }
 
+        public async Task<IReadOnlyList<TEntity>> GetAllWithSpecificationsAsync(ISpecifications<TEntity, TKey> specifications, CancellationToken ct = default)
+        {
+            var query = SpecificationEvaluator.CreateQuery<TEntity, TKey>(dbContext.Set<TEntity>().AsQueryable(), specifications);
+            return await query.ToListAsync(ct);
+        }
+
         public async Task<TEntity?> GetByIdAsync(TKey id, CancellationToken ct = default)
         {
             return await dbContext.Set<TEntity>().FindAsync(id, ct);
