@@ -33,7 +33,7 @@ namespace ECommerce.Application.Services
         {
             var specifications = new ProductSpecifications();
 
-            var products = await unitOfWork.GetRepository<Product, int>().GetAllWithSpecificationsAsync(specifications, ct);
+            var products = await unitOfWork.GetRepository<Product, int>().ListAsync(specifications, ct);
 
             var mappedProducts = mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductDto>>(products);
 
@@ -51,7 +51,9 @@ namespace ECommerce.Application.Services
 
         public async Task<Result<ProductDto>> GetProductByIdAsync(int id, CancellationToken ct = default)
         {
-            var product = await unitOfWork.GetRepository<Product, int>().GetByIdAsync(id, ct);
+            var specifications = new ProductSpecifications(id);
+
+            var product = await unitOfWork.GetRepository<Product, int>().GetAsync(specifications, ct);
             
             if(product == null)
             {

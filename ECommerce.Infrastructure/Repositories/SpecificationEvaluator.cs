@@ -20,6 +20,11 @@ namespace ECommerce.Infrastructure.Repositories
                     query,
                     (current, include) => current.Include(include));
             }
+
+            if (specifications.Criteria is not null)
+            {
+                query = query.Where(specifications.Criteria);
+            }
             return query;
         }
     }
