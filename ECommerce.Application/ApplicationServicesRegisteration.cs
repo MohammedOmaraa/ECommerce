@@ -10,7 +10,7 @@ namespace ECommerce.Application
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddAutoMapper(c => c.AddProfile(new ProductProfile()));
+            services.AddAutoMapper(c => c.AddProfile(new ProductProfile()), typeof(ApplicationServicesRegisteration).Assembly);
 
             services.AddScoped<IProductService, ProductService>();
 
