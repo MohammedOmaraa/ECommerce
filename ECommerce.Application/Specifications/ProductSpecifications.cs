@@ -1,12 +1,16 @@
 ﻿
+using ECommerce.Application.Params;
 using ECommerce.Domain.Entities.Products;
 
 namespace ECommerce.Application.Specifications
 {
     public class ProductSpecifications : BaseSpecifications<Product, int>
     {
-        public ProductSpecifications(int? brandId, int? typeId) 
-            : base(p => (!brandId.HasValue || p.BrandId == brandId.Value) && (!typeId.HasValue || p.TypeId == typeId.Value))
+        public ProductSpecifications(ProductSpecificationParameters parameters) 
+            : base(p => (!parameters.brandId.HasValue || p.BrandId == parameters.brandId.Value)
+            && (!parameters.typeId.HasValue || p.TypeId == parameters.typeId.Value)
+            && (string.IsNullOrEmpty(parameters.searchValue) || p.Name.ToLower().Contains(parameters.searchValue.ToLower()))
+            )
         {
             AddInclude(p => p.Brand);
             AddInclude(p => p.Type);

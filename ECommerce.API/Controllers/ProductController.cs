@@ -1,5 +1,6 @@
 ﻿using ECommerce.Application.Contracts;
 using ECommerce.Application.DTO_s.Products;
+using ECommerce.Application.Params;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.API.Controllers
@@ -7,9 +8,9 @@ namespace ECommerce.API.Controllers
     public class ProductController(IProductService productService) : ApiBaseController
     {
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProductsAsync(int? brandId, int? typeId, CancellationToken ct)
+        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProductsAsync([FromQuery] ProductSpecificationParameters parameters, CancellationToken ct)
         {
-            var products = await productService.GetAllProductsAsync(brandId, typeId, ct);
+            var products = await productService.GetAllProductsAsync(parameters, ct);
 
             return ToActionResult(products);
         }
