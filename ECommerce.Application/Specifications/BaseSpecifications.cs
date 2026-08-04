@@ -16,9 +16,19 @@ namespace ECommerce.Application.Specifications
 
         public List<Expression<Func<TEntity, object>>> IncludeExpressions {get; private set;} = [];
 
+        public Expression<Func<TEntity, object>>? OrderBy {  get; private set; }
+
+        public Expression<Func<TEntity, object>>? OrderByDesc {  get; private set; }
+
         public void AddInclude(Expression<Func<TEntity, object>> expression)
         {
             IncludeExpressions.Add(expression);
         }
+
+        public void AddOrderBy(Expression<Func<TEntity, object>>? orderBy)
+            => OrderBy = orderBy;
+
+        public void AddOrderByDesc(Expression<Func<TEntity, object>>? orderByDesc)
+            => OrderByDesc = orderByDesc;
     }
 }

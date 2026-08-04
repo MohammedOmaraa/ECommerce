@@ -14,6 +14,22 @@ namespace ECommerce.Application.Specifications
         {
             AddInclude(p => p.Brand);
             AddInclude(p => p.Type);
+
+            switch(parameters.sort)
+            {
+                case ProductSortBy.NameAsc:
+                    AddOrderBy(p => p.Name);
+                    break;
+                case ProductSortBy.NameDesc:
+                    AddOrderByDesc(p => p.Name);
+                    break;
+                case ProductSortBy.PriceAsc:
+                    AddOrderBy(p => p.Price);
+                    break;
+                case ProductSortBy.PriceDesc:
+                    AddOrderByDesc(p => p.Price);
+                    break;
+            }
         }
 
         public ProductSpecifications(int id) : base(p => p.Id == id)

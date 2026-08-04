@@ -8,5 +8,7 @@ namespace ECommerce.Application.Params
         public int? typeId { get; set; }
 
         public string? searchValue { get; set; }
+
+        public ProductSortBy sort { get; set; }
     }
 }

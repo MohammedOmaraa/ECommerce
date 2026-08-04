@@ -25,6 +25,17 @@ namespace ECommerce.Infrastructure.Repositories
             {
                 query = query.Where(specifications.Criteria);
             }
+
+            if (specifications.OrderBy is not null)
+            {
+                query = query.OrderBy(specifications.OrderBy);
+            }
+
+            if (specifications.OrderByDesc is not null)
+            {
+                query = query.OrderByDescending(specifications.OrderByDesc);
+            }
+
             return query;
         }
     }
