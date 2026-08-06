@@ -1,4 +1,5 @@
 ﻿
+using ECommerce.Application.Common;
 using ECommerce.Application.DTO_s.Products;
 using ECommerce.Application.Params;
 using static ECommerce.Application.Common.ResultOfT;
@@ -7,7 +8,7 @@ namespace ECommerce.Application.Contracts
 {
     public interface IProductService
     {
-        Task<Result<IReadOnlyList<ProductDto>>> GetAllProductsAsync(ProductSpecificationParameters parameters, CancellationToken ct = default);
+        Task<Result<PaginatedResult<ProductDto>>> GetAllProductsAsync(ProductSpecificationParameters parameters, CancellationToken ct = default);
 
         Task<Result<IReadOnlyList<BrandDto>>> GetAllProductBrandsAsync(CancellationToken ct = default);
 

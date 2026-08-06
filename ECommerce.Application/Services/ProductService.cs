@@ -30,7 +30,7 @@ namespace ECommerce.Application.Services
             return Result<IReadOnlyList<BrandDto>>.Success(mappedBrands);
         }
 
-        public async Task<Result<IReadOnlyList<ProductDto>>> GetAllProductsAsync(ProductSpecificationParameters parameters, CancellationToken ct = default)
+        public async Task<Result<PaginatedResult<ProductDto>>> GetAllProductsAsync(ProductSpecificationParameters parameters, CancellationToken ct = default)
         {
             var specifications = new ProductSpecifications(parameters);
 
@@ -38,7 +38,11 @@ namespace ECommerce.Application.Services
 
             var mappedProducts = mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductDto>>(products);
 
-            return Result<IReadOnlyList<ProductDto>>.Success(mappedProducts);
+            var countSpecifications = new ProductCountSpecifications(parameters);
+
+            var totalCount = await unitOfWork.GetRepository<Product, int>().CountAsync(countSpecifications, ct);
+
+            return Result<PaginatedResult<ProductDto>>.Success(new PaginatedResult<ProductDto>(mappedProducts, parameters.PageNumber, products.Count, totalCount));
         }
 
         public async Task<Result<IReadOnlyList<TypeDto>>> GetAllProductTypesAsync(CancellationToken ct = default)
