@@ -20,6 +20,19 @@ namespace ECommerce.Application.Specifications
 
         public Expression<Func<TEntity, object>>? OrderByDesc {  get; private set; }
 
+        public int Take { get; private set; }
+
+        public int Skip {  get; private set; }
+
+        public bool IsPaginated { get; private set; }
+
+        public void ApplyPagination(int pagesSize, int pageNumber)
+        {
+            IsPaginated = true;
+            Skip = (pageNumber - 1) * pagesSize;
+            Take = pagesSize;
+        }
+
         public void AddInclude(Expression<Func<TEntity, object>> expression)
         {
             IncludeExpressions.Add(expression);

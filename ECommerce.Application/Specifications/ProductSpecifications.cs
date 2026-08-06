@@ -7,15 +7,15 @@ namespace ECommerce.Application.Specifications
     public class ProductSpecifications : BaseSpecifications<Product, int>
     {
         public ProductSpecifications(ProductSpecificationParameters parameters) 
-            : base(p => (!parameters.brandId.HasValue || p.BrandId == parameters.brandId.Value)
-            && (!parameters.typeId.HasValue || p.TypeId == parameters.typeId.Value)
-            && (string.IsNullOrEmpty(parameters.searchValue) || p.Name.ToLower().Contains(parameters.searchValue.ToLower()))
+            : base(p => (!parameters.BrandId.HasValue || p.BrandId == parameters.BrandId.Value)
+            && (!parameters.TypeId.HasValue || p.TypeId == parameters.TypeId.Value)
+            && (string.IsNullOrEmpty(parameters.SearchValue) || p.Name.ToLower().Contains(parameters.SearchValue.ToLower()))
             )
         {
             AddInclude(p => p.Brand);
             AddInclude(p => p.Type);
 
-            switch(parameters.sort)
+            switch(parameters.Sort)
             {
                 case ProductSortBy.NameAsc:
                     AddOrderBy(p => p.Name);
@@ -30,6 +30,8 @@ namespace ECommerce.Application.Specifications
                     AddOrderByDesc(p => p.Price);
                     break;
             }
+
+            ApplyPagination(parameters.PageSize, parameters.PageNumber);
         }
 
         public ProductSpecifications(int id) : base(p => p.Id == id)
