@@ -14,6 +14,8 @@ namespace ECommerce.Application
 
             services.AddScoped<IProductService, ProductService>();
 
+            services.AddScoped<IBasketService, BasketService>();
+
             return services;
         }
     }
