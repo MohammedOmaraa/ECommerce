@@ -1,8 +1,10 @@
 ﻿
 using ECommerce.Domain.Contracts;
+using ECommerce.Domain.Entities.Identity;
 using ECommerce.Infrastructure.Data;
 using ECommerce.Infrastructure.Repositories;
 using ECommerce.Infrastructure.Seeding;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +19,10 @@ namespace ECommerce.Infrastructure
             services.AddDbContext<StoreDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("StoreDbConnection")));
 
+            services.AddDbContext<StoreIdentityDbContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("IdentityConnection")));
+
+            services.AddKeyedScoped<IDataSeeder, IdentityDataSeeder>("Identity");
             services.AddKeyedScoped<IDataSeeder, CatalogDataSeeder>("Catalog");
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -26,6 +32,8 @@ namespace ECommerce.Infrastructure
             services.AddScoped<IBasketRepository, BasketRepository>();
 
             services.AddSingleton<ICacheRepository, CacheRepository>();
+
+            services.AddIdentityCore<ApplicationUser>().AddRoles<IdentityRole>().AddEntityFrameworkStores<StoreIdentityDbContext>();
 
             return services;
         }
