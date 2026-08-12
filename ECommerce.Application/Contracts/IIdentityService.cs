@@ -16,5 +16,10 @@ namespace ECommerce.Application.Contracts
 
         Task<Result<IEnumerable<string>>> GetRolesAsync(string email, CancellationToken ct = default);
 
+        Task<Result<AddressDto>> GetAddressByEmailAsync(string email, CancellationToken ct = default);
+
+        Task<Result<AddressDto>> UpdateAddressByEmailAsync(string email, AddressDto addressDto, CancellationToken ct = default);
+
+        Task<Result<bool>> EmailExistsAsync(string email, CancellationToken ct = default);
     }
 }
