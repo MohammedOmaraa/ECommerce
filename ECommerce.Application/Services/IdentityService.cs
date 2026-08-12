@@ -63,5 +63,19 @@ namespace ECommerce.Application.Services
 
             return Result<IdentityUserResult>.Success(new IdentityUserResult(user.Id, user.Email, user.UserName, user.DisplayName));
         }
+
+        public async Task<Result<IEnumerable<string>>> GetRolesAsync(string email, CancellationToken ct = default)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+
+            if (user is null)
+            {
+                return Result<IEnumerable<string>>.Failure(Error.Failure(description: "User not found"));
+            }
+
+            var roles = await userManager.GetRolesAsync(user);
+
+            return Result<IEnumerable<string>>.Success(roles);
+        }
     }
 }

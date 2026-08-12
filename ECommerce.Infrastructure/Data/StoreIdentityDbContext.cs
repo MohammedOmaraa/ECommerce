@@ -17,6 +17,7 @@ namespace ECommerce.Infrastructure.Data
             builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
             builder.Entity<Address>().ToTable("Addresses");
 
+            builder.Entity<ApplicationUser>().HasIndex(x => x.NormalizedEmail).IsUnique();
         }
     }
 }

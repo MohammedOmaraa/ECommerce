@@ -4,11 +4,14 @@ using ECommerce.Domain.Entities.Identity;
 using ECommerce.Infrastructure.Data;
 using ECommerce.Infrastructure.Repositories;
 using ECommerce.Infrastructure.Seeding;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
+using System.Text;
 
 namespace ECommerce.Infrastructure
 {
@@ -33,7 +36,33 @@ namespace ECommerce.Infrastructure
 
             services.AddSingleton<ICacheRepository, CacheRepository>();
 
-            services.AddIdentityCore<ApplicationUser>().AddRoles<IdentityRole>().AddEntityFrameworkStores<StoreIdentityDbContext>();
+            services.AddIdentityCore<ApplicationUser>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            })
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<StoreIdentityDbContext>();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = true;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:SecretKey"])),
+                    ValidateIssuer = true,
+                    ValidIssuer = configuration["JWT:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = configuration["JWT:Audience"],
+                    ValidateLifetime = true,
+                    RequireExpirationTime = true,
+                };
+            });
 
             return services;
         }

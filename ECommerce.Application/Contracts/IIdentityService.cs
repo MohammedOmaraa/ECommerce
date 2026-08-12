@@ -1,6 +1,7 @@
 ﻿
 using ECommerce.Application.Common;
 using ECommerce.Application.DTO_s.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using static ECommerce.Application.Common.ResultOfT;
 
 namespace ECommerce.Application.Contracts
@@ -12,6 +13,8 @@ namespace ECommerce.Application.Contracts
         Task<Result<bool>> CheckPasswordAsync(string email, string password, CancellationToken ct = default);
 
         Task<Result<IdentityUserResult>> CreateUser(RegisterDto registerDto, CancellationToken ct = default);
+
+        Task<Result<IEnumerable<string>>> GetRolesAsync(string email, CancellationToken ct = default);
 
     }
 }

@@ -3,6 +3,7 @@ using ECommerce.Application.Common;
 using ECommerce.Application.Contracts;
 using ECommerce.Application.DTO_s.Products;
 using ECommerce.Application.Params;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.API.Controllers
@@ -10,6 +11,7 @@ namespace ECommerce.API.Controllers
     public class ProductController(IProductService productService) : ApiBaseController
     {
         [HttpGet]
+        [Authorize]
         [RedisCache(43200)]
         public async Task<ActionResult<PaginatedResult<ProductDto>>> GetAllProductsAsync([FromQuery] ProductSpecificationParameters parameters, CancellationToken ct)
         {
