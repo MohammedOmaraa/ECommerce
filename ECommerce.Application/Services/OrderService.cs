@@ -96,5 +96,29 @@ namespace ECommerce.Application.Services
 
             return Result<OrderToReturnDto>.Success(mapper.Map<OrderToReturnDto>(order));
         }
+
+        public async Task<Result<IReadOnlyList<DeliveryMethodDto>>> GetAllDeliveryMethodAsync(CancellationToken ct = default)
+        {
+            var deliveryMethods = await unitOfWork.GetRepository<DeliveryMethod, int>().GetAllAsync(ct);
+
+            return Result<IReadOnlyList<DeliveryMethodDto>>.Success(mapper.Map<IReadOnlyList<DeliveryMethodDto>>(deliveryMethods));
+        }
+
+        public async Task<Result<IReadOnlyList<OrderToReturnDto>>> GetAllOrdersByEmailAsync(string email, CancellationToken ct = default)
+        {
+            var orders = await unitOfWork.GetRepository<Order,Guid>().ListAsync(new OrderSpecifications(email), ct);
+
+            return Result<IReadOnlyList<OrderToReturnDto>>.Success(mapper.Map<IReadOnlyList<OrderToReturnDto>>(orders));
+        }
+
+        public async Task<Result<OrderToReturnDto>> GetOrderByIdAndEmailAsync(Guid id, string email, CancellationToken ct = default)
+        {
+            var order = await unitOfWork.GetRepository<Order, Guid>().GetAsync(new OrderSpecifications(id, email), ct);
+
+            if (order is null)
+                return Result<OrderToReturnDto>.Failure(Error.NotFound("Order.notFound", "Order is not found"));
+
+            return Result<OrderToReturnDto>.Success(mapper.Map<OrderToReturnDto>(order));
+        }
     }
 }
