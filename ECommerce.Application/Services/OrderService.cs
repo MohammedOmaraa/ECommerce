@@ -38,6 +38,11 @@ namespace ECommerce.Application.Services
                 return Result<OrderToReturnDto>.Failure(Error.Validation("Basket.Empty", "Basket is empty"));
             }
 
+            if (string.IsNullOrEmpty(basket.PaymentIntentId))
+            {
+                return Result<OrderToReturnDto>.Failure(Error.Validation("PaymentIntent.NotFound", "Payment must be initialized before creating the order."));
+            }
+
             var productRepo = unitOfWork.GetRepository<Product, int>();
 
             var productIds = basket.Items.Select(i=> i.Id).ToHashSet();
@@ -83,6 +88,7 @@ namespace ECommerce.Application.Services
                 DeliveryMethodId = deliveryMethod.Id,
                 Subtotal = subTotal,
                 DeliveryMethod = deliveryMethod,
+                PaymentIntentId = basket.PaymentIntentId
             };
 
             unitOfWork.GetRepository<Order, Guid>().Add(order);
